@@ -126,8 +126,8 @@
   .type-card .idea-item { display: flex; align-items: flex-start; gap: 6px; font-size: 13px; color: #b9c8e5; margin: 5px 0; line-height: 1.5; }
   .type-card .idea-item .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); margin-top: 7px; flex-shrink: 0; }
 
-  .calc-box { background: var(--panel-2); border: 1px solid var(--border); border-radius: 14px; padding: 22px 24px; margin: 20px 0; }
-  .calc-box .calc-title { font-size: 15px; font-weight: 700; color: #cfe0ff; margin: 0 0 6px; }
+  .calc-box { background: rgba(79,140,255,0.07); border: 2px solid rgba(79,140,255,0.35); border-radius: 14px; padding: 22px 24px; margin: 20px 0; }
+  .calc-box .calc-title { font-size: 16px; font-weight: 700; color: #fff; margin: 0 0 6px; }
   .calc-box .calc-desc { font-size: 13px; color: var(--muted); margin: 0 0 16px; }
   .calc-input-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
   .calc-input-row input { background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 10px 14px; font-size: 16px; width: 120px; outline: none; }
@@ -332,8 +332,9 @@
       <div class="calc-title">📐 포맷 비율 계산기</div>
       <div class="calc-desc">제작할 총 소재 수를 입력하면 포맷별로 몇 개씩 만들면 되는지 자동 계산합니다.</div>
       <div class="calc-input-row">
-        <input type="number" id="totalCreatives" min="1" max="100" placeholder="총 소재 수" oninput="calcFormat()">
-        <span style="color: var(--muted); font-size: 14px;">개 제작 예정</span>
+        <input type="number" id="totalCreatives" min="1" max="100" placeholder="예: 10">
+        <span style="color: var(--muted); font-size: 14px;">개</span>
+        <button onclick="calcFormat()">계산하기</button>
       </div>
       <div class="calc-result" id="calcResult">
         <div class="calc-result-grid" id="calcResultGrid"></div>
@@ -668,8 +669,8 @@
     const gridEl = document.getElementById('calcResultGrid');
     const noteEl = document.getElementById('calcNote');
 
-    if (!total || total < 1) {
-      resultEl.style.display = 'none';
+    if (!total || total < 1 || isNaN(total)) {
+      alert('소재 수를 1 이상 입력해주세요.');
       return;
     }
 
