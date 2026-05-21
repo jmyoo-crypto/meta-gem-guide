@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>광고 소재 기획 플래너 — 제품 입력 → 기획 자동 완성</title>
+<style>
+  :root {
+    --bg: #0b1220;
+    --panel: #11182b;
+    --panel-2: #162038;
+    --border: #1f2a44;
+    --text: #e6ecf5;
+    --muted: #9aa7bf;
+    --accent: #4f8cff;
+    --accent-2: #7c5cff;
+    --good: #22c55e;
+    --warn: #f59e0b;
+    --bad: #ef4444;
+    --pill-bg: #1a2440;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", sans-serif; line-height: 1.75; }
+  .wrap { max-width: 1000px; margin: 0 auto; padding: 48px 24px 96px; }
+
+  a { color: var(--accent); text-decoration: none; }
+  .back-link { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 13px; margin-bottom: 20px; }
+  .back-link:hover { color: var(--accent); }
+
+  header.hero { border: 1px solid var(--border); background: linear-gradient(135deg, #14224a 0%, #1a1340 100%); border-radius: 20px; padding: 36px 32px; margin-bottom: 28px; }
+  .tag { display: inline-block; background: var(--pill-bg); color: var(--accent); font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; letter-spacing: 0.5px; margin-bottom: 12px; }
+  h1 { font-size: 28px; line-height: 1.3; margin: 0 0 8px; }
+  .subtitle { color: var(--muted); font-size: 14px; margin: 0; line-height: 1.65; }
+
+  /* Input Section */
+  .input-card { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 28px; margin-bottom: 24px; }
+  .input-card h2 { font-size: 18px; margin: 0 0 20px; color: #cfe0ff; display: flex; align-items: center; gap: 8px; }
+  .input-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .input-group { display: flex; flex-direction: column; gap: 6px; }
+  .input-group label { font-size: 13px; font-weight: 600; color: var(--muted); }
+  .input-group .input-row { display: flex; align-items: center; gap: 8px; }
+  .input-group input, .input-group select {
+    background: var(--panel-2); border: 1px solid var(--border); color: var(--text);
+    border-radius: 8px; padding: 10px 14px; font-size: 15px; width: 100%; outline: none;
+    font-family: inherit;
+  }
+  .input-group input:focus, .input-group select:focus { border-color: var(--accent); }
+  .input-group .unit { color: var(--muted); font-size: 14px; white-space: nowrap; }
+  .input-hint { font-size: 12px; color: var(--muted); margin-top: 3px; }
+
+  .btn-start { display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--accent); color: #fff; border: none; border-radius: 10px; padding: 14px 32px; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; font-family: inherit; transition: background 0.15s; }
+  .btn-start:hover { background: #3a7aee; }
+
+  /* Results */
+  #results { display: none; }
+
+  /* Product summary */
+  .summary-bar { background: linear-gradient(135deg, rgba(79,140,255,0.12), rgba(124,92,255,0.08)); border: 1px solid rgba(79,140,255,0.25); border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .summary-bar .s-item { display: flex; flex-direction: column; }
+  .summary-bar .s-label { font-size: 11px; color: var(--muted); font-weight: 600; letter-spacing: 0.4px; }
+  .summary-bar .s-val { font-size: 15px; font-weight: 700; color: #fff; }
+  .summary-bar .s-divider { width: 1px; background: var(--border); align-self: stretch; }
+  .price-badge { background: var(--accent); color: #fff; font-size: 11px; font-weight: 700; padding: 2px 8px; border-radius: 999px; }
+
+  /* Section card */
+  .result-section { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 24px 28px; margin-bottom: 20px; }
+  .section-title { font-size: 17px; font-weight: 700; color: #cfe0ff; margin: 0 0 16px; display: flex; align-items: center; gap: 8px; }
+  .step-badge { display: inline-flex; align-items: center; justify-content: center; background: var(--accent); color: #fff; font-size: 12px; font-weight: 700; width: 24px; height: 24px; border-radius: 6px; flex-shrink: 0; }
+
+  /* P.D.A table */
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { background: var(--panel-2); color: #cfe0ff; font-weight: 600; font-size: 13px; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(79,140,255,0.04); }
+  td .persona { font-weight: 600; color: #fff; }
+  td .desire { color: var(--accent); font-weight: 600; }
+  td .aware { font-size: 12px; }
+  td .aware-badge { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+  .a1 { background: rgba(239,68,68,0.15); color: #fca5a5; }
+  .a2 { background: rgba(245,158,11,0.15); color: #fcd34d; }
+  .a3 { background: rgba(79,140,255,0.15); color: #93c5fd; }
+  .a4 { background: rgba(124,92,255,0.15); color: #c4b5fd; }
+  .a5 { background: rgba(34,197,94,0.15); color: #86efac; }
+  td .approach { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+  /* Distribution grid */
+  .dist-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+  .dist-card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .dist-card { background: var(--panel-2); border: 1px solid var(--border); border-radius: 12px; padding: 14px 16px; }
+  .dist-card .d-icon { font-size: 22px; margin-bottom: 4px; }
+  .dist-card .d-name { font-size: 13px; font-weight: 600; color: #cfe0ff; margin-bottom: 6px; }
+  .dist-card .d-count { font-size: 26px; font-weight: 800; color: var(--accent); }
+  .dist-card .d-unit { font-size: 13px; color: var(--muted); }
+  .dist-card .d-desc { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+  .dist-section-title { font-size: 14px; font-weight: 700; color: #cfe0ff; margin: 0 0 10px; }
+
+  /* Brief table */
+  .brief-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .brief-table th { background: var(--panel-2); color: #cfe0ff; font-weight: 600; padding: 10px 12px; text-align: left; border-bottom: 2px solid var(--border); font-size: 12px; }
+  .brief-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; line-height: 1.6; }
+  .brief-table tr:last-child td { border-bottom: none; }
+  .brief-table tr:hover td { background: rgba(79,140,255,0.04); }
+  .brief-table .num-cell { font-weight: 700; color: var(--accent); text-align: center; width: 36px; }
+  .type-pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 700; }
+  .type-product { background: rgba(79,140,255,0.15); color: #93c5fd; }
+  .type-proof { background: rgba(34,197,94,0.15); color: #86efac; }
+  .type-offer { background: rgba(245,158,11,0.15); color: #fcd34d; }
+  .type-story { background: rgba(124,92,255,0.15); color: #c4b5fd; }
+  .format-pill { display: inline-block; padding: 2px 8px; border-radius: 999px; font-size: 11px; font-weight: 600; background: rgba(255,255,255,0.07); color: var(--muted); }
+
+  /* Callout */
+  .callout { padding: 13px 16px; border-radius: 10px; font-size: 13px; margin: 14px 0; line-height: 1.65; }
+  .callout.tip { background: rgba(124,92,255,0.08); border-left: 4px solid var(--accent-2); }
+  .callout.warn { background: rgba(245,158,11,0.08); border-left: 4px solid var(--warn); }
+
+  @media (max-width: 640px) {
+    h1 { font-size: 21px; }
+    .wrap { padding: 28px 14px 60px; }
+    .input-grid { grid-template-columns: 1fr; }
+    .dist-row { grid-template-columns: 1fr; }
+    .result-section { padding: 18px 14px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a href="content-guide.html" class="back-link">← 콘텐츠 가이드로 돌아가기</a>
+
+  <header class="hero">
+    <div class="tag">광고 소재 기획 플래너</div>
+    <h1>제품 정보 입력 → 소재 기획 자동 완성</h1>
+    <p class="subtitle">제품명과 가격, 만들 소재 수를 입력하면 P.D.A 조합 · 유형 분배 · 포맷 분배 · 소재별 기획표를 자동으로 만들어드립니다.</p>
+  </header>
+
+  <!-- Input -->
+  <div class="input-card">
+    <h2>📋 제품 정보 입력</h2>
+    <div class="input-grid">
+      <div class="input-group">
+        <label>제품명</label>
+        <input type="text" id="productName" placeholder="예: 릴렉스틱">
+        <div class="input-hint">광고 문구에 직접 사용됩니다</div>
+      </div>
+      <div class="input-group">
+        <label>판매 가격</label>
+        <div class="input-row">
+          <input type="number" id="productPrice" placeholder="예: 89000" style="flex:1">
+          <span class="unit">원</span>
+        </div>
+        <div class="input-hint">욕구(D) 추천 방향에 반영됩니다</div>
+      </div>
+      <div class="input-group">
+        <label>제작할 총 소재 수</label>
+        <div class="input-row">
+          <input type="number" id="totalCount" placeholder="예: 10" min="3" max="50" style="flex:1">
+          <span class="unit">개</span>
+        </div>
+        <div class="input-hint">유형·포맷 배분에 반영됩니다</div>
+      </div>
+    </div>
+    <button class="btn-start" onclick="generatePlan()">기획 시작 →</button>
+  </div>
+
+  <!-- Results -->
+  <div id="results">
+
+    <!-- Summary -->
+    <div class="summary-bar" id="summaryBar"></div>
+
+    <!-- Step 1: PDA -->
+    <div class="result-section">
+      <div class="section-title"><span class="step-badge">1</span> P.D.A 조합표 — 어떤 소재를 만들 것인가</div>
+      <div class="callout tip">💡 각 행이 하나의 소재 방향입니다. 아래 기획표에서 이 조합들이 소재별로 배정됩니다.</div>
+      <div style="overflow-x:auto">
+        <table id="pdaTable">
+          <thead>
+            <tr>
+              <th style="width:4%">#</th>
+              <th style="width:16%">P — 페르소나</th>
+              <th style="width:16%">D — 욕구</th>
+              <th style="width:14%">A — 인지 단계</th>
+              <th>광고 방향 (브리프)</th>
+            </tr>
+          </thead>
+          <tbody id="pdaBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Step 2: Distribution -->
+    <div class="result-section">
+      <div class="section-title"><span class="step-badge">2</span> 유형 · 포맷 분배</div>
+      <div class="dist-row">
+        <div>
+          <div class="dist-section-title">🗂 유형별 분배</div>
+          <div class="dist-card-grid" id="typeGrid"></div>
+        </div>
+        <div>
+          <div class="dist-section-title">📐 포맷별 분배</div>
+          <div class="dist-card-grid" id="formatGrid"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Brief Table -->
+    <div class="result-section">
+      <div class="section-title"><span class="step-badge">3</span> 소재별 기획표 — 소재 1개당 방향 정리</div>
+      <div class="callout warn">⚠️ 자동 배정 결과입니다. P.D.A 조합과 유형·포맷은 상황에 맞게 조정해서 사용하세요.</div>
+      <div style="overflow-x:auto">
+        <table class="brief-table">
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>유형</th>
+              <th>포맷</th>
+              <th>P — 페르소나</th>
+              <th>D — 욕구</th>
+              <th>A — 인지단계</th>
+              <th>광고 방향</th>
+            </tr>
+          </thead>
+          <tbody id="briefBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+  </div><!-- /results -->
+
+</div><!-- /wrap -->
+
+<script>
+  // ─── 데이터 ───────────────────────────────────────────────
+  const PRICE_TIER = (p) => p < 20000 ? 'budget' : p < 50000 ? 'mid' : p < 150000 ? 'premium' : 'luxury';
+  const PRICE_LABEL = { budget: '저가 (2만원 미만)', mid: '중가 (2~5만원)', premium: '중고가 (5~15만원)', luxury: '고가 (15만원+)' };
+
+  const DESIRES = {
+    budget:  ['가성비 (대비 효과 최대화)', '시간 절약·간편함', '문제 해결 (저비용)', '일상 편의성'],
+    mid:     ['피로 해소·휴식', '효과·성능 검증', '합리적 선물', '편의성'],
+    premium: ['자기투자·건강 관리', '선물·효도 (프리미엄)', '품질·신뢰', '자신감·자존감'],
+    luxury:  ['최고의 품질', '특별한 경험', '프리미엄 선물', '자기투자·성취'],
+  };
+
+  const A_STAGES = [
+    { label: '1단계 — 문제 제기형', badge: 'a1', desc: '무인지 → 문제 인식' },
+    { label: '2단계 — 공감·해결 암시형', badge: 'a2', desc: '문제 알지만 해결책 모름' },
+    { label: '3단계 — 카테고리 비교형', badge: 'a3', desc: '해결책 카테고리는 앎' },
+    { label: '4단계 — 후기·신뢰 강화형', badge: 'a4', desc: '우리 제품 알지만 망설임' },
+    { label: '5단계 — 오퍼·긴급성형', badge: 'a5', desc: '구매 결정 직전' },
+  ];
+
+  const TYPES = [
+    { key: 'product', icon: '🛍️', name: '제품 중심', pct: 0.30, pill: 'type-product', desc: '사용 장면, 비포&애프터, 기능 시연' },
+    { key: 'proof',   icon: '👥', name: '사회적 증거', pct: 0.30, pill: 'type-proof',   desc: '고객 후기, UGC, 리뷰 캡처' },
+    { key: 'offer',   icon: '🎁', name: '오퍼 중심',   pct: 0.20, pill: 'type-offer',   desc: '할인, 한정 수량, 긴급성' },
+    { key: 'story',   icon: '📖', name: '브랜드 스토리', pct: 0.20, pill: 'type-story', desc: '창업자 스토리, 제조 과정' },
+  ];
+
+  const FORMATS = [
+    { icon: '📱', name: '9:16 세로 영상', pct: 0.40, desc: '릴스·스토리' },
+    { icon: '🔲', name: '1:1 · 4:5 영상', pct: 0.30, desc: '피드' },
+    { icon: '📚', name: '캐러셀',          pct: 0.20, desc: '여러 장 슬라이드' },
+    { icon: '🖼️', name: '정적 이미지',     pct: 0.10, desc: '보조용' },
+  ];
+
+  // ─── P.D.A 조합 생성 ─────────────────────────────────────
+  function buildCombos(name, price) {
+    const tier = PRICE_TIER(price);
+    const D = DESIRES[tier];
+    const priceStr = price.toLocaleString();
+    const monthCost = Math.round(price / 4).toLocaleString();
+
+    return [
+      {
+        p: '야근·장시간 업무 직장인',
+        d: tier === 'budget' ? '시간 절약·간편함' : '피로 해소·휴식',
+        aIdx: 1,
+        approach: `"매일 뭉치는 어깨, 마사지 받을 시간도 없죠?" → ${name} 3분 사용 장면으로 마무리`,
+      },
+      {
+        p: '부모님 선물 찾는 자녀 (30~50대)',
+        d: tier === 'budget' ? '합리적 선물' : '선물·효도',
+        aIdx: 2,
+        approach: `"부모님 선물 고민이라면" → ${name} 선물 포장·전달 장면, 받는 부모님 반응`,
+      },
+      {
+        p: '구매 후기를 남긴 실제 고객',
+        d: '신뢰·검증',
+        aIdx: 3,
+        approach: `실제 고객 핸드폰 촬영 UGC → "${name} 쓰고 나서 달라진 것" 솔직 후기`,
+      },
+      {
+        p: '가격에 민감한 알뜰 소비자',
+        d: tier === 'budget' ? '가성비 극대화' : `마사지샵 대비 가성비 (월 ${monthCost}원)`,
+        aIdx: 4,
+        approach: `"오늘까지만 ${priceStr}원 → OO% 할인 + 무료배송" 한정 오퍼 + 카운트다운`,
+      },
+      {
+        p: '문제를 아직 인식하지 못한 잠재 고객',
+        d: D[2] || D[0],
+        aIdx: 0,
+        approach: `충격적 훅으로 시작 → "이 영상 보면 왜 ${name}이 필요한지 알게 됩니다"`,
+      },
+      {
+        p: '건강·라이프스타일 관심자 (20~40대)',
+        d: tier === 'budget' ? '일상 편의성' : '자기투자·건강 관리',
+        aIdx: 2,
+        approach: `${name}를 아침/저녁 루틴에 자연스럽게 녹인 영상 → 브랜드 개발 스토리로 마무리`,
+      },
+    ];
+  }
+
+  // ─── 분배 계산 ────────────────────────────────────────────
+  function distribute(pool, total) {
+    let arr = pool.map(item => ({ ...item, count: Math.floor(total * item.pct) }));
+    let diff = total - arr.reduce((s, x) => s + x.count, 0);
+    for (let i = 0; i < diff; i++) arr[i % arr.length].count++;
+    return arr;
+  }
+
+  // ─── 기획표 배정 ─────────────────────────────────────────
+  function buildBriefRows(combos, types, formats, total) {
+    // 유형 리스트 (순서대로 N개)
+    const typeList = types.flatMap(t => Array(t.count).fill(t));
+    const formatList = formats.flatMap(f => Array(f.count).fill(f));
+
+    const rows = [];
+    for (let i = 0; i < total; i++) {
+      const combo = combos[i % combos.length];
+      const type  = typeList[i] || typeList[typeList.length - 1];
+      const fmt   = formatList[i] || formatList[formatList.length - 1];
+      rows.push({ num: i + 1, combo, type, fmt });
+    }
+    return rows;
+  }
+
+  // ─── 렌더 ─────────────────────────────────────────────────
+  function renderSummary(name, price, total) {
+    const tier = PRICE_TIER(price);
+    document.getElementById('summaryBar').innerHTML = `
+      <div class="s-item"><div class="s-label">제품명</div><div class="s-val">${name}</div></div>
+      <div class="s-divider"></div>
+      <div class="s-item"><div class="s-label">가격</div><div class="s-val">${price.toLocaleString()}원</div></div>
+      <div class="s-divider"></div>
+      <div class="s-item"><div class="s-label">가격대</div><div class="s-val"><span class="price-badge">${PRICE_LABEL[tier]}</span></div></div>
+      <div class="s-divider"></div>
+      <div class="s-item"><div class="s-label">총 소재 수</div><div class="s-val">${total}개</div></div>
+    `;
+  }
+
+  function renderPDA(combos) {
+    document.getElementById('pdaBody').innerHTML = combos.map((c, i) => {
+      const a = A_STAGES[c.aIdx];
+      return `
+        <tr>
+          <td style="color:var(--accent);font-weight:700;text-align:center">${i + 1}</td>
+          <td><span class="persona">${c.p}</span></td>
+          <td><span class="desire">${c.d}</span></td>
+          <td><span class="aware-badge ${a.badge}">${a.label.split('—')[0].trim()}</span><br><span style="font-size:11px;color:var(--muted)">${a.label.split('—')[1].trim()}</span></td>
+          <td><span class="approach">${c.approach}</span></td>
+        </tr>`;
+    }).join('');
+  }
+
+  function renderDist(types, formats) {
+    document.getElementById('typeGrid').innerHTML = types.map(t => `
+      <div class="dist-card">
+        <div class="d-icon">${t.icon}</div>
+        <div class="d-name">${t.name}</div>
+        <div><span class="d-count">${t.count}</span> <span class="d-unit">개</span></div>
+        <div class="d-desc">${t.desc}</div>
+      </div>`).join('');
+
+    document.getElementById('formatGrid').innerHTML = formats.map(f => `
+      <div class="dist-card">
+        <div class="d-icon">${f.icon}</div>
+        <div class="d-name">${f.name}</div>
+        <div><span class="d-count">${f.count}</span> <span class="d-unit">개</span></div>
+        <div class="d-desc">${f.desc}</div>
+      </div>`).join('');
+  }
+
+  function renderBrief(rows) {
+    document.getElementById('briefBody').innerHTML = rows.map(r => {
+      const a = A_STAGES[r.combo.aIdx];
+      return `
+        <tr>
+          <td class="num-cell">${r.num}</td>
+          <td><span class="type-pill ${r.type.pill}">${r.type.icon} ${r.type.name}</span></td>
+          <td><span class="format-pill">${r.fmt.icon} ${r.fmt.name}</span></td>
+          <td style="color:#fff;font-weight:600;font-size:13px">${r.combo.p}</td>
+          <td style="color:var(--accent);font-size:13px">${r.combo.d}</td>
+          <td><span class="aware-badge ${a.badge}" style="font-size:11px">${a.label.split('—')[0].trim()}</span></td>
+          <td style="color:var(--muted);font-size:13px">${r.combo.approach}</td>
+        </tr>`;
+    }).join('');
+  }
+
+  // ─── 메인 실행 ────────────────────────────────────────────
+  function generatePlan() {
+    const name  = document.getElementById('productName').value.trim();
+    const price = parseInt(document.getElementById('productPrice').value);
+    const total = parseInt(document.getElementById('totalCount').value);
+
+    if (!name) { alert('제품명을 입력해주세요.'); return; }
+    if (!price || price < 1) { alert('가격을 입력해주세요.'); return; }
+    if (!total || total < 3) { alert('소재 수를 3개 이상 입력해주세요.'); return; }
+
+    const combos  = buildCombos(name, price);
+    const types   = distribute(TYPES, total);
+    const formats = distribute(FORMATS, total);
+    const rows    = buildBriefRows(combos, types, formats, total);
+
+    renderSummary(name, price, total);
+    renderPDA(combos);
+    renderDist(types, formats);
+    renderBrief(rows);
+
+    document.getElementById('results').style.display = 'block';
+    document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+</script>
+</body>
+</html>
