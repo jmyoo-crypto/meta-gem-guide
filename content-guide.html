@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>광고 콘텐츠 실전 가이드 — GEM 시대의 소재 전략</title>
+<style>
+  :root {
+    --bg: #0b1220;
+    --panel: #11182b;
+    --panel-2: #162038;
+    --border: #1f2a44;
+    --text: #e6ecf5;
+    --muted: #9aa7bf;
+    --accent: #4f8cff;
+    --accent-2: #7c5cff;
+    --good: #22c55e;
+    --warn: #f59e0b;
+    --bad: #ef4444;
+    --pill-bg: #1a2440;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", sans-serif; line-height: 1.75; }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 56px 24px 96px; }
+
+  header.hero {
+    border: 1px solid var(--border);
+    background: linear-gradient(135deg, #14224a 0%, #1a1340 100%);
+    border-radius: 20px;
+    padding: 36px 32px;
+    margin-bottom: 28px;
+  }
+  .tag { display: inline-block; background: var(--pill-bg); color: var(--accent); font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 999px; letter-spacing: 0.5px; }
+  h1 { font-size: 30px; line-height: 1.3; margin: 14px 0 8px; }
+  .subtitle { color: var(--muted); font-size: 15px; margin-bottom: 18px; line-height: 1.65; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px; color: var(--muted); font-size: 13px; }
+  .meta span { background: rgba(255,255,255,0.04); padding: 4px 10px; border-radius: 8px; }
+
+  nav.toc { background: var(--panel-2); border: 1px solid var(--border); border-radius: 12px; padding: 14px 20px; margin-bottom: 24px; font-size: 14px; }
+  nav.toc strong { color: #cfe0ff; display: block; margin-bottom: 6px; }
+  nav.toc a { color: var(--muted); text-decoration: none; margin-right: 14px; line-height: 2.2; }
+  nav.toc a:hover { color: var(--accent); }
+
+  section { background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 28px; margin-bottom: 20px; scroll-margin-top: 20px; }
+  h2 { font-size: 21px; margin: 0 0 14px; display: flex; align-items: center; gap: 10px; line-height: 1.4; }
+  h2 .num { display: inline-flex; align-items: center; justify-content: center; min-width: 28px; height: 28px; background: var(--accent); color: #fff; border-radius: 8px; font-size: 13px; font-weight: 700; padding: 0 8px; }
+  h3 { font-size: 17px; margin: 22px 0 8px; color: #cfe0ff; }
+  h4 { font-size: 15px; margin: 16px 0 6px; color: #b9c8e5; display: flex; align-items: center; gap: 8px; }
+  h4 .badge { display: inline-flex; align-items: center; justify-content: center; background: var(--accent); color: #fff; font-size: 11px; font-weight: 700; min-width: 22px; height: 22px; border-radius: 6px; padding: 0 6px; flex-shrink: 0; }
+  p { margin: 8px 0 12px; color: #d6dff0; }
+  ul { padding-left: 22px; }
+  li { margin: 6px 0; color: #d6dff0; }
+  code { background: var(--panel-2); padding: 2px 6px; border-radius: 4px; font-size: 13px; color: #cfe0ff; }
+  a { color: var(--accent); }
+
+  .tldr { background: linear-gradient(135deg, rgba(79,140,255,0.14), rgba(124,92,255,0.08)); border-left: 4px solid var(--accent); padding: 18px 22px; border-radius: 12px; margin-bottom: 20px; }
+  .tldr strong { color: #fff; }
+
+  .callout { background: rgba(34,197,94,0.08); border-left: 4px solid var(--good); padding: 14px 18px; border-radius: 10px; margin: 14px 0; font-size: 14px; }
+  .callout.warn { background: rgba(245,158,11,0.08); border-left-color: var(--warn); }
+  .callout.tip { background: rgba(124,92,255,0.08); border-left-color: var(--accent-2); }
+  .callout.bad { background: rgba(239,68,68,0.08); border-left-color: var(--bad); }
+
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  th { background: var(--panel-2); color: #cfe0ff; font-weight: 600; }
+  tr:last-child td { border-bottom: none; }
+
+  .do-dont { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin: 14px 0; }
+  .do, .dont { padding: 14px 16px; border-radius: 10px; font-size: 14px; }
+  .do { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.3); }
+  .dont { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.3); }
+  .do strong, .dont strong { display: block; margin-bottom: 8px; font-size: 13px; letter-spacing: 0.3px; }
+  .do strong { color: var(--good); }
+  .dont strong { color: var(--bad); }
+  .do ul, .dont ul { margin: 0; padding-left: 18px; }
+  .do li, .dont li { margin: 4px 0; }
+
+  .type-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin: 16px 0; }
+  .type-card { background: var(--panel-2); border: 1px solid var(--border); border-radius: 14px; padding: 18px 20px; }
+  .type-card .icon { font-size: 28px; margin-bottom: 8px; }
+  .type-card .title { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+  .type-card .count { font-size: 12px; color: var(--accent); font-weight: 600; margin-bottom: 10px; }
+  .type-card .desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .type-card ul { margin: 8px 0 0; padding-left: 16px; }
+  .type-card li { font-size: 13px; color: #b9c8e5; margin: 3px 0; }
+
+  .format-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin: 16px 0; }
+  .format-card { background: var(--panel-2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; }
+  .format-card .pct { font-size: 32px; font-weight: 700; color: var(--accent); }
+  .format-card .name { font-size: 14px; font-weight: 600; color: #fff; margin: 4px 0; }
+  .format-card .detail { font-size: 12px; color: var(--muted); line-height: 1.5; }
+
+  .stat-row { display: flex; gap: 14px; margin: 14px 0; flex-wrap: wrap; }
+  .stat-box { flex: 1; min-width: 140px; background: var(--panel-2); border: 1px solid var(--border); border-radius: 12px; padding: 16px; text-align: center; }
+  .stat-box .num { font-size: 32px; font-weight: 700; color: var(--accent); }
+  .stat-box .label { font-size: 13px; color: var(--muted); line-height: 1.5; margin-top: 4px; }
+
+  .freq-row { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border-radius: 8px; margin: 6px 0; font-size: 14px; }
+  .freq-row.green { background: rgba(34,197,94,0.07); border: 1px solid rgba(34,197,94,0.2); }
+  .freq-row.yellow { background: rgba(245,158,11,0.07); border: 1px solid rgba(245,158,11,0.2); }
+  .freq-row.red { background: rgba(239,68,68,0.07); border: 1px solid rgba(239,68,68,0.2); }
+  .freq-row.dark-red { background: rgba(239,68,68,0.14); border: 1px solid rgba(239,68,68,0.35); }
+  .freq-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+  .freq-row.green .freq-dot { background: var(--good); }
+  .freq-row.yellow .freq-dot { background: var(--warn); }
+  .freq-row.red .freq-dot, .freq-row.dark-red .freq-dot { background: var(--bad); }
+  .freq-val { font-weight: 700; min-width: 60px; }
+  .freq-action { color: var(--muted); font-size: 13px; }
+
+  .pda-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 16px 0; }
+  .pda-card { background: var(--panel-2); border: 1px solid var(--border); border-radius: 14px; padding: 18px; }
+  .pda-card .letter { font-size: 36px; font-weight: 800; color: var(--accent); line-height: 1; }
+  .pda-card .word { font-size: 13px; color: var(--muted); margin: 2px 0 8px; }
+  .pda-card .name { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 6px; }
+  .pda-card p { font-size: 13px; color: #b9c8e5; margin: 0 0 8px; }
+  .pda-card .example { font-size: 12px; background: rgba(79,140,255,0.08); border-radius: 6px; padding: 8px 10px; color: var(--accent); }
+
+  .example-table-wrap { background: var(--panel-2); border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; margin: 14px 0; }
+  .example-table-wrap p { font-size: 13px; color: var(--accent); font-weight: 700; margin: 0 0 10px; }
+
+  .back-link { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 13px; text-decoration: none; margin-bottom: 20px; }
+  .back-link:hover { color: var(--accent); }
+
+  .footer-note { text-align: center; color: var(--muted); font-size: 13px; margin-top: 30px; }
+
+  @media (max-width: 640px) {
+    h1 { font-size: 22px; }
+    .wrap { padding: 32px 16px 60px; }
+    section { padding: 20px 16px; }
+    .do-dont { grid-template-columns: 1fr; }
+    .pda-grid { grid-template-columns: 1fr; }
+    .type-grid { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <a href="index.html" class="back-link">← 전체 가이드로 돌아가기</a>
+
+  <header class="hero">
+    <span class="tag">광고 콘텐츠 전략 · GEM 시대 실전 가이드</span>
+    <h1>소재가 곧 타겟팅입니다 — 콘텐츠 실전 가이드</h1>
+    <p class="subtitle">
+      GEM 시대에 마케터가 통제할 수 있는 가장 강력한 무기는 광고 소재입니다.<br>
+      어떤 유형을 만들고, 어떤 포맷으로 찍고, 무엇이 진짜 다른 소재인지 정리했습니다.
+    </p>
+    <div class="meta">
+      <span>🎨 콘텐츠 전략 집중 정리</span>
+      <span>📐 유형 · 포맷 · 다양성 · 교체 기준</span>
+      <span>🔗 <a href="index.html" style="color:inherit;">전체 가이드</a> · <a href="calculator.html" style="color:inherit;">예산 계산기</a></span>
+    </div>
+  </header>
+
+  <nav class="toc">
+    <strong>목차</strong>
+    <a href="#why">① 왜 콘텐츠가 전부인가</a>
+    <a href="#types">② 4가지 유형</a>
+    <a href="#format">③ 포맷 전략</a>
+    <a href="#different">④ 진짜 다른 소재</a>
+    <a href="#hook">⑤ 첫 3초의 법칙</a>
+    <a href="#rotation">⑥ 교체 기준</a>
+    <a href="#filter">⑦ 좋은 소재 vs 나쁜 소재</a>
+    <a href="#quantity">⑧ 소재 수량 기준</a>
+  </nav>
+
+  <!-- 왜 콘텐츠가 전부인가 -->
+  <section id="why">
+    <h2><span class="num">1</span> 왜 콘텐츠가 전부인가</h2>
+    <div class="tldr">
+      <strong>핵심 한 줄</strong><br>
+      타게팅·입찰·캠페인 세팅은 AI가 가져갔습니다. 마케터가 통제할 수 있는 건 <strong>어떤 소재를 공급하느냐</strong>와 <strong>얼마나 깨끗한 전환 데이터를 주느냐</strong>, 이 두 가지뿐입니다.
+    </div>
+    <table>
+      <thead><tr><th>통제 주체</th><th>통제 영역</th></tr></thead>
+      <tbody>
+        <tr><td>🤖 <strong>메타 AI</strong></td><td>누구에게 / 언제 / 어디에 / 얼마에 보여줄지</td></tr>
+        <tr><td>🧑‍💼 <strong>마케터</strong></td><td>① 무엇을 보여줄지 (크리에이티브)<br>② 어떤 결과 데이터를 줄지 (CAPI 신호)</td></tr>
+      </tbody>
+    </table>
+    <p>
+      AI(Andromeda)는 광고 이미지·영상·카피·음성을 직접 읽고 "이 광고는 어떤 사람에게 어울리는지" 판단합니다.
+      즉 <strong>소재 안에 담긴 내용 자체가 타겟팅 신호</strong>입니다. 관심사 옵션에서 "30대 여성"을 설정하는 게 아니라,
+      소재 안에 30대 여성의 언어·상황·고민을 담으면 AI가 알아서 찾아갑니다.
+    </p>
+  </section>
+
+  <!-- 4가지 유형 -->
+  <section id="types">
+    <h2><span class="num">2</span> 4가지 유형 — 골고루 갖춰야 하는 이유</h2>
+    <p>
+      유형이 한쪽으로 쏠리면 AI가 특정 구매 단계의 사람에게만 광고를 보여줘서 <strong>신규 고객 모수가 점점 줄어듭니다.</strong>
+      4가지를 골고루 운영해야 퍼널 전체를 커버할 수 있습니다.
+    </p>
+
+    <div class="type-grid">
+      <div class="type-card">
+        <div class="icon">🛍️</div>
+        <div class="title">제품 중심</div>
+        <div class="count">3~4개 권장</div>
+        <div class="desc">구매를 고려 중인 사람 대상. 제품이 실제로 어떻게 쓰이는지 보여주는 게 핵심.</div>
+        <ul>
+          <li>실제 사용 장면 시연</li>
+          <li>비포 &amp; 애프터</li>
+          <li>기능/스펙 직접 설명</li>
+          <li>"이런 분께 맞습니다"</li>
+        </ul>
+      </div>
+      <div class="type-card">
+        <div class="icon">👥</div>
+        <div class="title">사회적 증거</div>
+        <div class="count">3~4개 권장</div>
+        <div class="desc">"다른 사람들도 쓴다"는 신뢰가 목적. 광고처럼 안 보일수록 효과적.</div>
+        <ul>
+          <li>실제 고객 후기 영상 (UGC)</li>
+          <li>리뷰 캡처 모음</li>
+          <li>창업자·직원 직접 말하기</li>
+          <li>"누적 판매 OO만개" 등 수치</li>
+        </ul>
+      </div>
+      <div class="type-card">
+        <div class="icon">🎁</div>
+        <div class="title">오퍼 중심</div>
+        <div class="count">2~3개 권장</div>
+        <div class="desc">이미 관심 있는 사람의 구매 결정을 당기는 역할. 시즌·이벤트와 연결.</div>
+        <ul>
+          <li>할인/쿠폰 강조</li>
+          <li>한정 수량·기간</li>
+          <li>무료배송, 사은품</li>
+          <li>번들 구성 안내</li>
+        </ul>
+      </div>
+      <div class="type-card">
+        <div class="icon">📖</div>
+        <div class="title">브랜드 스토리</div>
+        <div class="count">2~3개 권장</div>
+        <div class="desc">처음 브랜드를 접하는 사람 대상. 신뢰와 호감을 쌓는 것이 목적.</div>
+        <ul>
+          <li>왜 이 제품을 만들었는지</li>
+          <li>창업자 스토리</li>
+          <li>제조·원료 과정</li>
+          <li>브랜드 철학·가치</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      ⚠️ <strong>제품 광고만 돌리면 생기는 문제</strong><br>
+      AI가 "이미 살 마음이 있는 사람"에게만 광고를 보여주게 됩니다. 그 모수는 한정되어 있어서 시간이 지날수록 CPM이 올라가고 ROAS가 떨어집니다. 브랜드 스토리·후기 유형이 <strong>신규 고객을 계속 유입</strong>시키는 역할을 합니다.
+    </div>
+  </section>
+
+  <!-- 포맷 전략 -->
+  <section id="format">
+    <h2><span class="num">3</span> 포맷 전략 — 세로가 왕인 이유</h2>
+    <p>
+      2026년 기준 메타 광고 인벤토리의 <strong>90%가 세로형</strong>(릴스·스토리)입니다.
+      가로나 정사각형만 만들면 이 공간에서 잘려서 노출되거나 경쟁력이 떨어집니다.
+    </p>
+
+    <div class="format-grid">
+      <div class="format-card">
+        <div class="pct">40%</div>
+        <div class="name">9:16 세로 영상</div>
+        <div class="detail">릴스·스토리 전용<br>촬영 단계부터 세로로</div>
+      </div>
+      <div class="format-card">
+        <div class="pct">30%</div>
+        <div class="name">1:1 · 4:5 영상</div>
+        <div class="detail">피드 중심<br>스크롤 멈추게 할 강한 첫 프레임</div>
+      </div>
+      <div class="format-card">
+        <div class="pct">20%</div>
+        <div class="name">캐러셀</div>
+        <div class="detail">여러 제품·기능 나열<br>비포&amp;애프터, 단계 설명</div>
+      </div>
+      <div class="format-card">
+        <div class="pct">10%</div>
+        <div class="name">정적 이미지</div>
+        <div class="detail">보조 역할<br>강한 카피와 함께</div>
+      </div>
+    </div>
+
+    <h3>포맷별 실전 포인트</h3>
+    <table>
+      <thead><tr><th>포맷</th><th>핵심 포인트</th><th>피해야 할 것</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>9:16 릴스</strong></td>
+          <td>첫 3초 훅이 생명. 자막 필수(소리 끄고 보는 사람 많음). 자연스러운 UGC 스타일이 광고처럼 안 보여서 유리.</td>
+          <td>인트로 로고 2~3초짜리. 너무 완성도 높은 광고 느낌.</td>
+        </tr>
+        <tr>
+          <td><strong>4:5 피드</strong></td>
+          <td>스크롤 중 멈추게 하는 강한 첫 이미지·프레임 필요. 카피는 위쪽 2줄 안에 핵심 메시지.</td>
+          <td>텍스트 과다. 제품만 덩그러니 있는 화이트 배경.</td>
+        </tr>
+        <tr>
+          <td><strong>캐러셀</strong></td>
+          <td>첫 카드에서 클릭 유도, 이후 카드에서 상세 설명. 스와이프 유도 문구 활용.</td>
+          <td>모든 카드가 비슷한 구성. 마지막 카드 CTA 누락.</td>
+        </tr>
+        <tr>
+          <td><strong>정적 이미지</strong></td>
+          <td>단순하고 강한 카피 한 줄. 제품보다 결과·혜택을 보여주는 이미지.</td>
+          <td>텍스트 20% 이상 채우기. 작은 글씨로 스펙 나열.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout tip">
+      💡 <strong>실무 팁 — 한 번 찍고 포맷 3개 만들기</strong><br>
+      하나의 영상 원본을 9:16 / 4:5 / 1:1로 편집하면 3개 소재처럼 보이지만, AI 입장에서는 같은 내용으로 인식할 수 있습니다. 포맷 변경보다 <strong>내용 자체가 다른 소재</strong>를 만드는 게 우선입니다. 포맷 변형은 커버리지 확보용으로만 활용하세요.
+    </div>
+  </section>
+
+  <!-- 진짜 다른 소재 -->
+  <section id="different">
+    <h2><span class="num">4</span> 진짜 다른 소재 — P.D.A 프레임워크</h2>
+    <p>
+      메타의 AI(Andromeda)는 비슷한 소재를 <strong>Entity ID</strong>라는 같은 ID로 묶어서 하나의 노출 기회만 줍니다.
+      "다른 소재"를 만들었다고 해도 AI가 같은 것으로 인식하면 의미가 없습니다.
+    </p>
+
+    <div class="do-dont">
+      <div class="do">
+        <strong>✅ 진짜 다른 소재 (각각 노출 기회 받음)</strong>
+        <ul>
+          <li>훅(첫 3초)이 완전히 다름</li>
+          <li>출연진이 다름 (모델 vs UGC vs 창업자)</li>
+          <li>메시지 각도가 다름 (기능 vs 감성 vs 후기)</li>
+          <li>시각 스타일이 다름 (스튜디오 vs 일상)</li>
+          <li>포맷이 다름 (영상 vs 캐러셀 vs 이미지)</li>
+        </ul>
+      </div>
+      <div class="dont">
+        <strong>❌ 같은 소재로 묶이는 것 (노출 기회 1개)</strong>
+        <ul>
+          <li>CTA 버튼 색깔만 변경</li>
+          <li>헤드라인 카피 한 줄 수정</li>
+          <li>같은 영상에 자막만 추가</li>
+          <li>배경색·로고 위치 조정</li>
+          <li>이미지 크기·여백만 변경</li>
+        </ul>
+      </div>
+    </div>
+
+    <h3>P.D.A 프레임워크 — 소재 기획 기준</h3>
+    <p>소재를 만들 때 이 3가지 중 <strong>최소 1가지가 본질적으로 달라야</strong> AI가 새 소재로 인식합니다.</p>
+
+    <div class="pda-grid">
+      <div class="pda-card">
+        <div class="letter">P</div>
+        <div class="word">Persona · 대상/상황</div>
+        <div class="name">광고 속 주인공을 다르게</div>
+        <p>광고에 등장하는 사람·상황·라이프스타일을 바꾸면 AI가 다른 그룹에게 노출합니다.</p>
+        <div class="example">
+          "야근 후 지친 직장인" vs "육아 중인 엄마" vs "운동 후 회복하는 사람"
+        </div>
+      </div>
+      <div class="pda-card">
+        <div class="letter">D</div>
+        <div class="word">Desire · 욕구/소구점</div>
+        <div class="name">강조하는 혜택·감정을 다르게</div>
+        <p>같은 제품이라도 "시간 절약"을 강조하느냐, "사람들한테 인정받기"를 강조하느냐에 따라 반응하는 사람이 달라집니다.</p>
+        <div class="example">
+          "피로 해소(기능)" vs "선물로 효도(감성)" vs "가성비 최고(가격)"
+        </div>
+      </div>
+      <div class="pda-card">
+        <div class="letter">A</div>
+        <div class="word">Awareness · 인지 단계</div>
+        <div class="name">고객이 얼마나 아는지에 맞게</div>
+        <p>처음 보는 사람과 이미 알아보는 사람에게 같은 광고를 보여주면 낭비입니다. 인지 단계별로 메시지를 달리하세요.</p>
+        <div class="example">
+          "문제 제기형(처음 보는 사람)" vs "기능 비교형(알아보는 사람)" vs "후기형(거의 결정한 사람)"
+        </div>
+      </div>
+    </div>
+
+    <h3>실전 예시 — 마사지기 광고 5개 소재 기획</h3>
+    <div class="example-table-wrap">
+      <p>💡 같은 제품, 다른 P.D.A 조합으로 5개 소재를 만들면 Entity ID 5개를 받아 노출 기회 5배</p>
+      <table>
+        <thead><tr><th>소재</th><th>P (페르소나)</th><th>D (욕구)</th><th>A (인지 단계)</th></tr></thead>
+        <tbody>
+          <tr><td>퇴근 후 혼자 쓰는 장면</td><td>직장인</td><td>피로 해소</td><td>문제 제기형</td></tr>
+          <tr><td>부모님께 선물하는 장면</td><td>30~50대 자녀</td><td>효도·감성</td><td>감성 소구형</td></tr>
+          <tr><td>실제 고객 후기 영상</td><td>주부·다양한 연령</td><td>신뢰·검증</td><td>구매 고려형</td></tr>
+          <tr><td>기능 시연 + 스펙 설명</td><td>꼼꼼히 따지는 사람</td><td>성능·효과</td><td>비교형</td></tr>
+          <tr><td>할인 + 한정 수량 강조</td><td>가격 민감한 사람</td><td>가성비</td><td>구매 결정형</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="callout">
+      🎯 <strong>소재 만들기 전 체크 질문</strong><br>
+      "이 소재는 기존 소재와 P·D·A 중 무엇이 다른가?" — 답이 없으면 만들어도 AI가 같은 것으로 묶습니다.
+    </div>
+  </section>
+
+  <!-- 첫 3초 -->
+  <section id="hook">
+    <h2><span class="num">5</span> 첫 3초의 법칙 — Hook &amp; Hold Rate</h2>
+    <p>
+      영상은 첫 3초 안에 시선을 잡지 못하면 그 이후는 의미가 없습니다.
+      메타가 크리에이티브 진단에 사용하는 핵심 지표 2가지입니다.
+    </p>
+
+    <div class="stat-row">
+      <div class="stat-box">
+        <div class="num">30%+</div>
+        <div class="label">Hook Rate 목표<br>3초 조회수 ÷ 노출수</div>
+      </div>
+      <div class="stat-box">
+        <div class="num">10%+</div>
+        <div class="label">Hold Rate 목표<br>15초 조회수 ÷ 노출수</div>
+      </div>
+    </div>
+
+    <h3>훅(Hook)을 잘 만드는 3가지 방법</h3>
+    <table>
+      <thead><tr><th>방식</th><th>예시</th><th>효과</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>강한 질문</strong></td>
+          <td>"왜 마사지 받아도 다음날 또 뭉칠까요?"</td>
+          <td>공감과 궁금증 동시 유발</td>
+        </tr>
+        <tr>
+          <td><strong>충격적 비주얼·결과</strong></td>
+          <td>비포&amp;애프터를 첫 장면에 배치</td>
+          <td>스크롤 멈추게 하는 시각적 충격</td>
+        </tr>
+        <tr>
+          <td><strong>명확한 가치 제안</strong></td>
+          <td>"3분이면 충분합니다. 지금 해보세요."</td>
+          <td>즉각적인 혜택 인식</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout warn">
+      ⚠️ <strong>Hook Rate가 높아도 Hold Rate가 낮으면 문제</strong><br>
+      첫 3초는 봤는데 이후 이탈한다면, 훅은 자극적이지만 내용이 따라가지 못하는 상태입니다. Hook Rate와 Hold Rate를 반드시 함께 봐야 합니다.
+    </div>
+
+    <div class="callout tip">
+      💡 <strong>자막은 선택이 아닌 필수</strong><br>
+      릴스·스토리를 소리 없이 보는 사용자가 전체의 60~85%입니다. 자막이 없으면 무음 시청자에게 훅 자체가 전달되지 않습니다.
+    </div>
+  </section>
+
+  <!-- 교체 기준 -->
+  <section id="rotation">
+    <h2><span class="num">6</span> 소재 교체 기준 — 빈도(Frequency)로 판단</h2>
+    <p>
+      "10일마다 교체"처럼 고정 사이클로 운영하는 건 메타 공식 방식이 아닙니다.
+      <strong>빈도(Frequency) 지표를 보고</strong> 트리거하는 것이 맞습니다.
+    </p>
+
+    <div class="freq-row green">
+      <div class="freq-dot"></div>
+      <div class="freq-val">~2.0</div>
+      <div style="flex:1; font-weight:600; color: var(--good);">🟢 양호</div>
+      <div class="freq-action">현재 소재 그대로 유지</div>
+    </div>
+    <div class="freq-row yellow">
+      <div class="freq-dot"></div>
+      <div class="freq-val">2.5+</div>
+      <div style="flex:1; font-weight:600; color: var(--warn);">🟡 주의</div>
+      <div class="freq-action">새 소재 제작 시작</div>
+    </div>
+    <div class="freq-row red">
+      <div class="freq-dot"></div>
+      <div class="freq-val">3.0+</div>
+      <div style="flex:1; font-weight:600; color: var(--bad);">🔴 위험</div>
+      <div class="freq-action">즉시 교체 권장</div>
+    </div>
+    <div class="freq-row dark-red">
+      <div class="freq-dot"></div>
+      <div class="freq-val" style="font-size:12px;">빈도↑ + CTR↓ + CPM↑</div>
+      <div style="flex:1; font-weight:600; color: var(--bad);">🚨 피로 확실</div>
+      <div class="freq-action">즉시 교체</div>
+    </div>
+
+    <h3>업계 평균 데이터 (참고)</h3>
+    <table>
+      <thead><tr><th>상황</th><th>교체 주기</th></tr></thead>
+      <tbody>
+        <tr><td>상위 브랜드 평균</td><td><strong>약 10일</strong></td></tr>
+        <tr><td>퍼널 상단 (신규 고객 타겟)</td><td><strong>5~7일</strong></td></tr>
+        <tr><td>퍼널 중간 (리타겟)</td><td><strong>10~14일</strong></td></tr>
+        <tr><td>저예산 계정</td><td><strong>2~4주</strong></td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout tip">
+      💡 <strong>소재 추가 루틴이 핵심</strong><br>
+      교체 타이밍을 기다리는 게 아니라, <strong>매주 2~3개 신규 소재를 꾸준히 추가</strong>하는 루틴을 만드세요. AI가 새 재료를 계속 받아야 학습이 멈추지 않습니다.
+    </div>
+
+    <div class="callout warn">
+      ⚠️ <strong>예산 올릴 때 소재를 먼저 확보하세요</strong><br>
+      예산을 2배 늘리면 AI가 더 많은 사람에게 보여줘야 하는데, 소재가 부족하면 같은 소재를 반복 노출합니다. 그러면 빈도가 급격히 올라가고 ROAS가 동시에 떨어집니다. <strong>예산 증액 전에 소재를 먼저 보강하세요.</strong>
+    </div>
+  </section>
+
+  <!-- 좋은 소재 vs 나쁜 소재 -->
+  <section id="filter">
+    <h2><span class="num">7</span> 좋은 소재 vs 나쁜 소재</h2>
+    <p>
+      CTR이 높은 소재가 좋은 소재가 아닙니다. 구매 의도 없는 사람들이 클릭하면 AI가 "이 광고의 고객은 구경꾼"이라고 학습하고,
+      이후에 더 많은 구경꾼에게 광고를 뿌립니다.
+    </p>
+
+    <div class="do-dont">
+      <div class="do">
+        <strong>✅ 필터링 소재 — GEM이 좋아함</strong>
+        <ul>
+          <li>제품 가격을 광고에 명시</li>
+          <li>구체적인 혜택·스펙을 전면 배치</li>
+          <li>"이런 분께 맞습니다"로 타겟 명확화</li>
+          <li>초반 CTR이 낮아도 CVR이 높은 소재</li>
+          <li>랜딩 페이지와 메시지 일치</li>
+        </ul>
+      </div>
+      <div class="dont">
+        <strong>❌ 낚시성 소재 — AI 학습을 망침</strong>
+        <ul>
+          <li>자극적 문구로 클릭 유도, 랜딩에서 실망</li>
+          <li>CTR은 높지만 구매로 이어지지 않음</li>
+          <li>단순 호기심 유발 밈·논란성 소재</li>
+          <li>실제 제품과 다른 과장된 비주얼</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="callout bad">
+      🚨 <strong>CTR 함정</strong><br>
+      CTR이 높아도 CVR(전환율)이 낮으면 광고비만 소진하고 AI를 잘못 학습시킵니다. CTR은 반드시 <strong>CPA·ROAS·CVR과 함께</strong> 봐야 하며, 클릭만 높고 전환이 없는 소재는 빠르게 중단해야 합니다.
+    </div>
+  </section>
+
+  <!-- 소재 수량 기준 -->
+  <section id="quantity">
+    <h2><span class="num">8</span> 소재 수량 기준 — 예산에 따라 다름</h2>
+    <p>
+      소재가 많을수록 좋은 건 아닙니다. 예산이 한정되어 있으면 소재가 너무 많으면 오히려 각 소재가 충분한 데이터를 받지 못해 winner를 가릴 수 없습니다.
+    </p>
+
+    <table>
+      <thead><tr><th>캠페인 일 예산</th><th>권장 소재 수</th><th>이유</th></tr></thead>
+      <tbody>
+        <tr><td>100만원 이상</td><td><strong>12~15개</strong></td><td>소재당 충분한 예산, 다양성 극대화</td></tr>
+        <tr><td>40~99만원</td><td><strong>8~12개</strong></td><td>탐색과 집중의 적정 균형</td></tr>
+        <tr><td>20~39만원</td><td><strong>5~8개</strong></td><td>더 늘리면 소재당 데이터 부족</td></tr>
+        <tr><td>20만원 미만</td><td><strong>3~5개</strong></td><td>캠페인 통합 우선 검토 권장</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout warn">
+      ⚠️ <strong>30개 이상 넣으면 역효과 — 노이즈 역설</strong><br>
+      한정된 일 예산이 30개로 분산되면 소재당 노출이 너무 적어 승자를 가릴 수 없습니다. 잠재력 있는 소재가 데이터도 못 받고 사장됩니다.<br>
+      예외: 일 광고비 $10,000(약 1,400만원) 이상 대형 계정은 20개+ 가능.
+    </div>
+
+    <div class="callout tip">
+      💡 <strong>예산·소재 수 자동 계산</strong><br>
+      본인 CPA 기준으로 정확한 소재 수를 계산하려면 → <a href="calculator.html">예산 계산기</a>를 사용하세요.
+    </div>
+  </section>
+
+  <div style="background: var(--panel); border: 1px solid var(--border); border-radius: 16px; padding: 24px 28px; margin-top: 8px;">
+    <h2 style="font-size: 18px; margin: 0 0 14px; color: #cfe0ff;">✅ 콘텐츠 전략 요약 체크리스트</h2>
+    <table>
+      <thead><tr><th>항목</th><th>기준</th><th>상태</th></tr></thead>
+      <tbody>
+        <tr><td>소재 수량</td><td>예산에 맞는 적정 개수 (5~15개)</td><td>⬜</td></tr>
+        <tr><td>유형 다양성</td><td>제품·후기·오퍼·스토리 4가지 골고루</td><td>⬜</td></tr>
+        <tr><td>포맷</td><td>9:16 세로 영상 40% 이상 포함</td><td>⬜</td></tr>
+        <tr><td>소재 차별성</td><td>P.D.A 중 1가지 이상 본질적으로 다름</td><td>⬜</td></tr>
+        <tr><td>첫 3초</td><td>Hook Rate 30%+ 목표, 자막 삽입</td><td>⬜</td></tr>
+        <tr><td>신규 소재 루틴</td><td>매주 2~3개 지속 추가</td><td>⬜</td></tr>
+        <tr><td>교체 기준</td><td>빈도 2.5+ 주의, 3.0+ 즉시 교체</td><td>⬜</td></tr>
+        <tr><td>소재 품질</td><td>CTR만 보지 않고 CVR·ROAS 함께 확인</td><td>⬜</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p class="footer-note" style="margin-top: 20px;">
+    <a href="index.html">← 전체 가이드</a> · <a href="calculator.html">예산 계산기</a>
+  </p>
+
+</div>
+</body>
+</html>
