@@ -52,6 +52,27 @@
   .input-group .unit { color: var(--muted); font-size: 14px; white-space: nowrap; }
   .input-hint { font-size: 12px; color: var(--muted); margin-top: 3px; }
 
+  .situation-row { margin-bottom: 20px; }
+  .situation-row label.row-label { display: block; font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 10px; }
+  .situation-options { display: flex; gap: 12px; flex-wrap: wrap; }
+  .sit-option { display: flex; align-items: center; gap: 10px; background: var(--panel-2); border: 2px solid var(--border); border-radius: 12px; padding: 14px 20px; cursor: pointer; flex: 1; min-width: 200px; transition: all 0.15s; }
+  .sit-option:hover { border-color: var(--accent); }
+  .sit-option input[type="radio"] { display: none; }
+  .sit-option.selected { border-color: var(--accent); background: rgba(79,140,255,0.08); }
+  .sit-option .sit-icon { font-size: 24px; }
+  .sit-option .sit-text { flex: 1; }
+  .sit-option .sit-title { font-size: 14px; font-weight: 700; color: #fff; }
+  .sit-option .sit-desc { font-size: 12px; color: var(--muted); margin-top: 2px; line-height: 1.5; }
+  .sit-option .sit-check { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--border); flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+  .sit-option.selected .sit-check { background: var(--accent); border-color: var(--accent); }
+  .sit-option.selected .sit-check::after { content: '✓'; font-size: 11px; color: #fff; font-weight: 700; }
+
+  .priority-badge { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; font-size: 11px; font-weight: 800; flex-shrink: 0; }
+  .p1 { background: #f59e0b; color: #000; }
+  .p2 { background: #9aa7bf; color: #000; }
+  .p3 { background: #92714a; color: #fff; }
+  .p4 { background: var(--panel-2); color: var(--muted); border: 1px solid var(--border); }
+
   .btn-start { display: flex; align-items: center; justify-content: center; gap: 8px; background: var(--accent); color: #fff; border: none; border-radius: 10px; padding: 14px 32px; font-size: 16px; font-weight: 700; cursor: pointer; width: 100%; font-family: inherit; transition: background 0.15s; }
   .btn-start:hover { background: #3a7aee; }
 
@@ -169,6 +190,30 @@
         <div class="input-hint">유형·포맷 배분에 반영됩니다</div>
       </div>
     </div>
+
+    <!-- Situation Selector -->
+    <div class="situation-row">
+      <label class="row-label">브랜드 상황 선택</label>
+      <div class="situation-options">
+        <div class="sit-option selected" id="sit-new" onclick="selectSit('new')">
+          <span class="sit-icon">🚀</span>
+          <div class="sit-text">
+            <div class="sit-title">신규 론칭</div>
+            <div class="sit-desc">출시 초기 · 인지도 0에서 시작<br>→ 제품중심 · 스토리 우선</div>
+          </div>
+          <div class="sit-check" id="check-new"></div>
+        </div>
+        <div class="sit-option" id="sit-existing" onclick="selectSit('existing')">
+          <span class="sit-icon">📈</span>
+          <div class="sit-text">
+            <div class="sit-title">이미 판매 중 (전환 목적)</div>
+            <div class="sit-desc">리뷰·증거 확보 · ROAS 극대화<br>→ 사회적증거 · 제품 우선</div>
+          </div>
+          <div class="sit-check" id="check-existing"></div>
+        </div>
+      </div>
+    </div>
+
     <button class="btn-start" onclick="generatePlan()">기획 시작 →</button>
   </div>
 
@@ -259,12 +304,30 @@
     { label: '5단계 — 오퍼·긴급성형', badge: 'a5', desc: '구매 결정 직전' },
   ];
 
-  const TYPES = [
-    { key: 'product', icon: '🛍️', name: '제품 중심', pct: 0.30, pill: 'type-product', desc: '사용 장면, 비포&애프터, 기능 시연' },
-    { key: 'proof',   icon: '👥', name: '사회적 증거', pct: 0.30, pill: 'type-proof',   desc: '고객 후기, UGC, 리뷰 캡처' },
-    { key: 'offer',   icon: '🎁', name: '오퍼 중심',   pct: 0.20, pill: 'type-offer',   desc: '할인, 한정 수량, 긴급성' },
-    { key: 'story',   icon: '📖', name: '브랜드 스토리', pct: 0.20, pill: 'type-story', desc: '창업자 스토리, 제조 과정' },
-  ];
+  let currentSit = 'new';
+
+  const TYPE_DIST = {
+    new: [
+      { key: 'product', icon: '🛍️', name: '제품 중심',     pct: 0.35, pill: 'type-product', desc: '사용 장면, 비포&애프터, 기능 시연', rank: 1 },
+      { key: 'story',   icon: '📖', name: '브랜드 스토리', pct: 0.25, pill: 'type-story',   desc: '창업자 스토리, 제조 과정',         rank: 2 },
+      { key: 'proof',   icon: '👥', name: '사회적 증거',   pct: 0.25, pill: 'type-proof',   desc: '고객 후기, UGC, 리뷰 캡처',       rank: 3 },
+      { key: 'offer',   icon: '🎁', name: '오퍼 중심',     pct: 0.15, pill: 'type-offer',   desc: '할인, 한정 수량, 긴급성',         rank: 4 },
+    ],
+    existing: [
+      { key: 'proof',   icon: '👥', name: '사회적 증거',   pct: 0.35, pill: 'type-proof',   desc: '고객 후기, UGC, 리뷰 캡처',       rank: 1 },
+      { key: 'product', icon: '🛍️', name: '제품 중심',     pct: 0.30, pill: 'type-product', desc: '사용 장면, 비포&애프터, 기능 시연', rank: 2 },
+      { key: 'offer',   icon: '🎁', name: '오퍼 중심',     pct: 0.20, pill: 'type-offer',   desc: '할인, 한정 수량, 긴급성',         rank: 3 },
+      { key: 'story',   icon: '📖', name: '브랜드 스토리', pct: 0.15, pill: 'type-story',   desc: '창업자 스토리, 제조 과정',         rank: 4 },
+    ],
+  };
+
+  const SIT_LABEL = { new: '🚀 신규 론칭', existing: '📈 이미 판매 중 (전환)' };
+
+  function selectSit(val) {
+    currentSit = val;
+    document.querySelectorAll('.sit-option').forEach(el => el.classList.remove('selected'));
+    document.getElementById('sit-' + val).classList.add('selected');
+  }
 
   const FORMATS = [
     { icon: '📱', name: '9:16 세로 영상', pct: 0.40, desc: '릴스·스토리' },
@@ -355,6 +418,8 @@
       <div class="s-item"><div class="s-label">가격대</div><div class="s-val"><span class="price-badge">${PRICE_LABEL[tier]}</span></div></div>
       <div class="s-divider"></div>
       <div class="s-item"><div class="s-label">총 소재 수</div><div class="s-val">${total}개</div></div>
+      <div class="s-divider"></div>
+      <div class="s-item"><div class="s-label">브랜드 상황</div><div class="s-val">${SIT_LABEL[currentSit]}</div></div>
     `;
   }
 
@@ -375,9 +440,12 @@
   function renderDist(types, formats) {
     document.getElementById('typeGrid').innerHTML = types.map(t => `
       <div class="dist-card">
-        <div class="d-icon">${t.icon}</div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">
+          <span style="font-size:20px">${t.icon}</span>
+          <span class="priority-badge p${t.rank}">${t.rank}위</span>
+        </div>
         <div class="d-name">${t.name}</div>
-        <div><span class="d-count">${t.count}</span> <span class="d-unit">개</span></div>
+        <div><span class="d-count">${t.count}</span> <span class="d-unit">개 (${Math.round(t.pct*100)}%)</span></div>
         <div class="d-desc">${t.desc}</div>
       </div>`).join('');
 
@@ -417,7 +485,7 @@
     if (!total || total < 3) { alert('소재 수를 3개 이상 입력해주세요.'); return; }
 
     const combos  = buildCombos(name, price);
-    const types   = distribute(TYPES, total);
+    const types   = distribute(TYPE_DIST[currentSit], total);
     const formats = distribute(FORMATS, total);
     const rows    = buildBriefRows(combos, types, formats, total);
 
