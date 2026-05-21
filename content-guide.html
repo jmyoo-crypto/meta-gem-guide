@@ -122,6 +122,28 @@
   .back-link { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 13px; text-decoration: none; margin-bottom: 20px; }
   .back-link:hover { color: var(--accent); }
 
+  .type-card .idea-title { font-size: 12px; font-weight: 700; color: var(--accent); margin: 12px 0 6px; letter-spacing: 0.4px; text-transform: uppercase; }
+  .type-card .idea-item { display: flex; align-items: flex-start; gap: 6px; font-size: 13px; color: #b9c8e5; margin: 5px 0; line-height: 1.5; }
+  .type-card .idea-item .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); margin-top: 7px; flex-shrink: 0; }
+
+  .calc-box { background: var(--panel-2); border: 1px solid var(--border); border-radius: 14px; padding: 22px 24px; margin: 20px 0; }
+  .calc-box .calc-title { font-size: 15px; font-weight: 700; color: #cfe0ff; margin: 0 0 6px; }
+  .calc-box .calc-desc { font-size: 13px; color: var(--muted); margin: 0 0 16px; }
+  .calc-input-row { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+  .calc-input-row input { background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 8px; padding: 10px 14px; font-size: 16px; width: 120px; outline: none; }
+  .calc-input-row input:focus { border-color: var(--accent); }
+  .calc-input-row button { background: var(--accent); color: #fff; border: none; border-radius: 8px; padding: 10px 20px; font-size: 14px; font-weight: 700; cursor: pointer; }
+  .calc-input-row button:hover { background: #3a7aee; }
+  .calc-result { display: none; margin-top: 18px; }
+  .calc-result-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; margin-top: 10px; }
+  .calc-result-card { background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 14px 16px; }
+  .calc-result-card .r-pct { font-size: 11px; color: var(--muted); margin-bottom: 2px; }
+  .calc-result-card .r-name { font-size: 13px; font-weight: 600; color: #cfe0ff; margin-bottom: 8px; }
+  .calc-result-card .r-count { font-size: 28px; font-weight: 800; color: var(--accent); }
+  .calc-result-card .r-unit { font-size: 13px; color: var(--muted); }
+  .calc-result-card .r-tip { font-size: 12px; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+  .calc-note { font-size: 12px; color: var(--muted); margin-top: 10px; }
+
   .footer-note { text-align: center; color: var(--muted); font-size: 13px; margin-top: 30px; }
 
   @media (max-width: 640px) {
@@ -200,48 +222,72 @@
         <div class="title">제품 중심</div>
         <div class="count">3~4개 권장</div>
         <div class="desc">구매를 고려 중인 사람 대상. 제품이 실제로 어떻게 쓰이는지 보여주는 게 핵심.</div>
-        <ul>
-          <li>실제 사용 장면 시연</li>
-          <li>비포 &amp; 애프터</li>
-          <li>기능/스펙 직접 설명</li>
-          <li>"이런 분께 맞습니다"</li>
-        </ul>
+        <div class="idea-title">콘텐츠 유형</div>
+        <div class="idea-item"><div class="dot"></div>실제 사용 장면 시연</div>
+        <div class="idea-item"><div class="dot"></div>비포 &amp; 애프터 (전후 결과 비교)</div>
+        <div class="idea-item"><div class="dot"></div>기능·스펙 자막 시연</div>
+        <div class="idea-item"><div class="dot"></div>"이런 분께 맞습니다" 타겟 명시</div>
+        <div class="idea-item"><div class="dot"></div>언박싱·개봉기 영상</div>
+        <div class="idea-item"><div class="dot"></div>경쟁 제품과 간접 비교</div>
+        <div class="idea-title">실제 예시 (마사지기)</div>
+        <div class="idea-item"><div class="dot"></div>목·어깨에 대고 3분 사용하는 장면, 표정 변화</div>
+        <div class="idea-item"><div class="dot"></div>"세기 5단계 조절" 자막 + 버튼 조작 클로즈업</div>
+        <div class="idea-item"><div class="dot"></div>사용 전 뭉친 어깨 vs 사용 후 유연하게 움직이는 모습</div>
+        <div class="idea-item"><div class="dot"></div>"하루 8시간 앉아 계신 분들께"로 시작하는 영상</div>
       </div>
       <div class="type-card">
         <div class="icon">👥</div>
         <div class="title">사회적 증거</div>
         <div class="count">3~4개 권장</div>
         <div class="desc">"다른 사람들도 쓴다"는 신뢰가 목적. 광고처럼 안 보일수록 효과적.</div>
-        <ul>
-          <li>실제 고객 후기 영상 (UGC)</li>
-          <li>리뷰 캡처 모음</li>
-          <li>창업자·직원 직접 말하기</li>
-          <li>"누적 판매 OO만개" 등 수치</li>
-        </ul>
+        <div class="idea-title">콘텐츠 유형</div>
+        <div class="idea-item"><div class="dot"></div>실제 고객 핸드폰 촬영 UGC 영상</div>
+        <div class="idea-item"><div class="dot"></div>리뷰 별점·댓글 캡처 슬라이드</div>
+        <div class="idea-item"><div class="dot"></div>누적 판매량·사용자 수 수치 강조</div>
+        <div class="idea-item"><div class="dot"></div>창업자·직원이 직접 말하는 영상</div>
+        <div class="idea-item"><div class="dot"></div>크리에이터·인플루언서 후기</div>
+        <div class="idea-item"><div class="dot"></div>전/후기 고객 인터뷰 형식</div>
+        <div class="idea-title">실제 예시 (마사지기)</div>
+        <div class="idea-item"><div class="dot"></div>30대 직장인이 핸드폰으로 찍은 "퇴근 후 매일 씁니다" 영상</div>
+        <div class="idea-item"><div class="dot"></div>별점 4.9, 리뷰 상위 5개 캡처 → 캐러셀 슬라이드</div>
+        <div class="idea-item"><div class="dot"></div>"지금까지 3만 2천명이 선택했습니다" 텍스트 강조 영상</div>
+        <div class="idea-item"><div class="dot"></div>대표가 직접 "이 제품 왜 만들었는지" 30초 영상</div>
       </div>
       <div class="type-card">
         <div class="icon">🎁</div>
         <div class="title">오퍼 중심</div>
         <div class="count">2~3개 권장</div>
         <div class="desc">이미 관심 있는 사람의 구매 결정을 당기는 역할. 시즌·이벤트와 연결.</div>
-        <ul>
-          <li>할인/쿠폰 강조</li>
-          <li>한정 수량·기간</li>
-          <li>무료배송, 사은품</li>
-          <li>번들 구성 안내</li>
-        </ul>
+        <div class="idea-title">콘텐츠 유형</div>
+        <div class="idea-item"><div class="dot"></div>할인율 + 무료배송 동시 강조</div>
+        <div class="idea-item"><div class="dot"></div>한정 수량 "OO개 남음" 긴급성</div>
+        <div class="idea-item"><div class="dot"></div>2개 이상 구매 시 추가 할인 번들</div>
+        <div class="idea-item"><div class="dot"></div>첫 구매 사은품·체험 키트</div>
+        <div class="idea-item"><div class="dot"></div>시즌 특가 (명절·기념일 연계)</div>
+        <div class="idea-item"><div class="dot"></div>카운트다운 타이머 삽입 영상</div>
+        <div class="idea-title">실제 예시 (마사지기)</div>
+        <div class="idea-item"><div class="dot"></div>"오늘만 20% 할인 + 무료배송" → 타이머 카운트다운 영상</div>
+        <div class="idea-item"><div class="dot"></div>"2개 구매 시 30% 추가 할인, 재고 47개 남음"</div>
+        <div class="idea-item"><div class="dot"></div>어버이날 특집: "부모님 선물, 지금 주문하면 당일 발송"</div>
+        <div class="idea-item"><div class="dot"></div>"첫 구매 고객 전용 — 파우치 사은품 증정 중"</div>
       </div>
       <div class="type-card">
         <div class="icon">📖</div>
         <div class="title">브랜드 스토리</div>
         <div class="count">2~3개 권장</div>
         <div class="desc">처음 브랜드를 접하는 사람 대상. 신뢰와 호감을 쌓는 것이 목적.</div>
-        <ul>
-          <li>왜 이 제품을 만들었는지</li>
-          <li>창업자 스토리</li>
-          <li>제조·원료 과정</li>
-          <li>브랜드 철학·가치</li>
-        </ul>
+        <div class="idea-title">콘텐츠 유형</div>
+        <div class="idea-item"><div class="dot"></div>창업자 "이 제품을 만든 이유" 영상</div>
+        <div class="idea-item"><div class="dot"></div>제조·연구 과정 비하인드</div>
+        <div class="idea-item"><div class="dot"></div>"OO 전문가와 함께 개발" 신뢰도</div>
+        <div class="idea-item"><div class="dot"></div>브랜드 철학·가치 영상</div>
+        <div class="idea-item"><div class="dot"></div>고객과의 에피소드·편지 형식</div>
+        <div class="idea-item"><div class="dot"></div>팀·제조 현장 소개 영상</div>
+        <div class="idea-title">실제 예시 (마사지기)</div>
+        <div class="idea-item"><div class="dot"></div>대표: "저도 만성 어깨 통증으로 3년을 고생하다 직접 만들었습니다"</div>
+        <div class="idea-item"><div class="dot"></div>물리치료사와 공동 개발 과정 → 연구실 촬영 영상</div>
+        <div class="idea-item"><div class="dot"></div>제조 공장 내부 + 품질 검수 과정 30초 영상</div>
+        <div class="idea-item"><div class="dot"></div>고객 편지 낭독: "덕분에 5년 만에 잠을 잘 잤어요"</div>
       </div>
     </div>
 
@@ -279,6 +325,19 @@
         <div class="pct">10%</div>
         <div class="name">정적 이미지</div>
         <div class="detail">보조 역할<br>강한 카피와 함께</div>
+      </div>
+    </div>
+
+    <div class="calc-box">
+      <div class="calc-title">📐 포맷 비율 계산기</div>
+      <div class="calc-desc">제작할 총 소재 수를 입력하면 포맷별로 몇 개씩 만들면 되는지 자동 계산합니다.</div>
+      <div class="calc-input-row">
+        <input type="number" id="totalCreatives" min="1" max="100" placeholder="총 소재 수" oninput="calcFormat()">
+        <span style="color: var(--muted); font-size: 14px;">개 제작 예정</span>
+      </div>
+      <div class="calc-result" id="calcResult">
+        <div class="calc-result-grid" id="calcResultGrid"></div>
+        <div class="calc-note" id="calcNote"></div>
       </div>
     </div>
 
@@ -594,5 +653,53 @@
   </p>
 
 </div>
+<script>
+  const formats = [
+    { name: '9:16 세로 영상', pct: 0.4, icon: '📱', place: '릴스·스토리', tip: '촬영 단계부터 세로로. 자막 필수.' },
+    { name: '1:1 · 4:5 영상', pct: 0.3, icon: '🔲', place: '피드', tip: '스크롤 멈추게 할 강한 첫 프레임 필요.' },
+    { name: '캐러셀', pct: 0.2, icon: '📚', place: '피드·스토리', tip: '제품 라인업, 비포&애프터, 단계 설명에 효과적.' },
+    { name: '정적 이미지', pct: 0.1, icon: '🖼️', place: '피드 보조', tip: '강한 카피 한 줄과 함께. 영상 보완용.' },
+  ];
+
+  function calcFormat() {
+    const input = document.getElementById('totalCreatives');
+    const total = parseInt(input.value);
+    const resultEl = document.getElementById('calcResult');
+    const gridEl = document.getElementById('calcResultGrid');
+    const noteEl = document.getElementById('calcNote');
+
+    if (!total || total < 1) {
+      resultEl.style.display = 'none';
+      return;
+    }
+
+    // 비율대로 계산 후 합계가 total이 되도록 보정
+    let counts = formats.map(f => ({ ...f, count: Math.floor(total * f.pct) }));
+    let sum = counts.reduce((a, b) => a + b.count, 0);
+    let remainder = total - sum;
+    // 나머지는 비율이 높은 순서대로 1씩 추가
+    for (let i = 0; i < remainder; i++) {
+      counts[i % counts.length].count += 1;
+    }
+
+    gridEl.innerHTML = counts.map(f => `
+      <div class="calc-result-card">
+        <div class="r-pct">${Math.round(f.pct * 100)}% · ${f.place}</div>
+        <div class="r-name">${f.icon} ${f.name}</div>
+        <div><span class="r-count">${f.count}</span> <span class="r-unit">개</span></div>
+        <div class="r-tip">${f.tip}</div>
+      </div>
+    `).join('');
+
+    const zeroFormats = counts.filter(f => f.count === 0).map(f => f.name);
+    if (total < 4) {
+      noteEl.innerHTML = `⚠️ 소재 수가 적어 일부 포맷이 0개입니다. 최소 4개 이상일 때 모든 포맷을 커버할 수 있습니다. <a href="calculator.html">예산 계산기</a>로 적정 소재 수를 먼저 확인해보세요.`;
+    } else {
+      noteEl.innerHTML = `총 <strong style="color:var(--accent)">${total}개</strong> 소재 중 9:16 세로 영상이 가장 많아야 릴스·스토리 인벤토리를 효과적으로 커버할 수 있습니다.`;
+    }
+
+    resultEl.style.display = 'block';
+  }
+</script>
 </body>
 </html>
