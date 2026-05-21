@@ -22,6 +22,10 @@
   * { box-sizing: border-box; }
   html, body { margin: 0; padding: 0; background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Pretendard", "Noto Sans KR", sans-serif; line-height: 1.75; }
   .wrap { max-width: 960px; margin: 0 auto; padding: 56px 24px 96px; }
+  .site-nav { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+  .site-nav .nav-item { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 10px; font-size: 13px; font-weight: 600; text-decoration: none; border: 1px solid var(--border); color: var(--muted); background: var(--panel); transition: all 0.15s; }
+  .site-nav .nav-item:hover { color: var(--accent); border-color: var(--accent); }
+  .site-nav .nav-item.active { color: #fff; background: var(--accent); border-color: var(--accent); }
   header.hero {
     border: 1px solid var(--border);
     background: linear-gradient(135deg, #14224a 0%, #1a1340 100%);
@@ -117,6 +121,13 @@
 </head>
 <body>
 <div class="wrap">
+
+  <nav class="site-nav">
+    <a href="index.html" class="nav-item active">📖 전체 가이드</a>
+    <a href="content-guide.html" class="nav-item">🎨 콘텐츠 전략</a>
+    <a href="planner.html" class="nav-item">🗂 소재 기획 플래너</a>
+    <a href="calculator.html" class="nav-item">📐 예산 계산기</a>
+  </nav>
 
   <header class="hero">
     <span class="tag">Meta 광고 알고리즘 가이드 · 2026년 5월 기준</span>
